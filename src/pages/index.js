@@ -1,14 +1,43 @@
 import * as React from "react";
 import "../components/Index.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CheckedInList from "../components/CheckedInList";
 import InputForm from "../components/InputForm";
+const { GoogleSpreadsheet } = require("google-spreadsheet");
 
-const IndexPage = () => {
+const IndexPage = async () => {
+  const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
+  await doc.useServiceAccountAuth({
+    client_email: process.env.GOOGLE_CLIENT_EMAIL,
+    api_key: process.env.GOOGLE_SERVICE_PRIVATE_KEY,
+  });
+
+  await doc.loadInfo();
+  console.log(doc.title);
+
   const [checkedInVols, setCheckedInVols] = useState([]);
+  // const [uniqVols, setUniqVols] = useState([]);
+  // const [response, setResponse] = useState(null);
 
-  const checkInVol = (newVolInfo) => {
-    // this will become a post function
+  // useEffect(async () => {
+  //   const result = await fetch(`${doc}`).then((res) => res.json());
+
+  //   setUniqVols(result.data);
+  //   console.log(uniqVols);
+  // });
+
+  const checkInVol = async (newVolInfo) => {
+    //   try {
+    //     const response = await fetch("/api/some-endpoint?name=Paul");
+    //     if (!response.ok) {
+    //       throw new Error(response.statusText);
+    //     }
+    //     const data = await response.json();
+    //     setResponse(data);
+    //   } catch (error) {
+    //     setResponse(error.message);
+    //   }
+
     const newVols = [...checkedInVols];
     const newVolJSON = { ...newVolInfo };
     newVols.push(newVolJSON);
