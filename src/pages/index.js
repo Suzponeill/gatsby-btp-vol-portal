@@ -1,11 +1,38 @@
 import * as React from "react";
 import "../components/Index.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import CheckedInList from "../components/CheckedInList";
 import InputForm from "../components/InputForm";
 
+// const { google } = require("googleapis");
+// const sheets = google.sheets("v4");
+// const fetch = require("node-fetch");
+
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
+  // const [currentVolEntries, setCurrentVolEntries] = useState([]);
+
+  // const d = new Date();
+  // let Year = d.getFullYear();
+
+  // async function main() {
+  //   console.log("in the api call func");
+  //   const authClient = await authorize();
+  //   const request = {
+  //     spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
+  //     range: `'${Year}'!D1:E10`,
+  //     valueRenderOption: FORMATTED_VALUE,
+  //     auth: authClient,
+  //   };
+
+  //   try {
+  //     const response = (await sheets.spreadsheets.values.get(request)).data;
+  //     console.log(JSON.stringify(response, null, 2));
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // }
+  // useEffect(main, []);
 
   const checkInVol = (newVolInfo) => {
     // this will become a post function
