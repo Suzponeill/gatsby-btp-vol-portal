@@ -10,5 +10,8 @@ module.exports = {
     title: `gatsby_btp_vol_portal`,
     siteUrl: `https://www.yourdomain.tld`,
   },
+  flags: {
+    FUNCTIONS: true,
+  },
   plugins: [],
 };

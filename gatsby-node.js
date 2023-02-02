@@ -1,20 +1,28 @@
-exports.onCreateWebpackConfig = ({ actions }) => {
+exports.onCreateWebpackConfig = ({
+  stage,
+  rules,
+  loaders,
+  plugins,
+  actions,
+}) => {
   actions.setWebpackConfig({
     resolve: {
       fallback: {
-        assert: false,
-        crypto: false,
-        http: false,
+        fs: false,
+        tls: false,
+        net: false,
+        child_process: false,
+        url: require.resolve("url/"),
+        path: require.resolve("path-browserify"),
         https: false,
-        os: false,
-        stream: false,
-        util: false,
-        url: false,
-        path: false,
-        process: false,
-        zlib: false,
-        querystring: false,
+        util: require.resolve("util/"),
+        stream: require.resolve("stream-browserify"),
+        os: require.resolve("os-browserify/browser"),
+        crypto: require.resolve("crypto-browserify"),
+        assert: require.resolve("assert/"),
       },
     },
   });
 };
+
+//
