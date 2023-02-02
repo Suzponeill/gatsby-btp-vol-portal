@@ -15,9 +15,19 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
+    "fs": "^0.0.1-security",
     "gatsby": "^5.5.0",
-    "googleapis": "^110.0.0",
+    "google-spreadsheet": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "browser": {
+    "assert": false,
+    "crypto": false,
+    "http": false,
+    "https": false
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3"
   }
 }

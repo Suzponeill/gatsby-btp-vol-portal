@@ -9,6 +9,11 @@ exports.onCreateWebpackConfig = ({ actions }) => {
         os: false,
         stream: false,
         util: false,
+        url: false,
+        path: false,
+        process: false,
+        zlib: false,
+        querystring: false,
       },
     },
   });

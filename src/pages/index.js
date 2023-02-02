@@ -4,42 +4,33 @@ import { useState } from "react";
 import CheckedInList from "../components/CheckedInList";
 import InputForm from "../components/InputForm";
 
-// const { google } = require("googleapis");
-// const sheets = google.sheets("v4");
-// const fetch = require("node-fetch");
-
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
-  // const [currentVolEntries, setCurrentVolEntries] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState(false);
 
-  // const d = new Date();
-  // let Year = d.getFullYear();
-
-  // async function main() {
-  //   console.log("in the api call func");
-  //   const authClient = await authorize();
-  //   const request = {
-  //     spreadsheetId: process.env.GOOGLE_SPREADSHEET_ID,
-  //     range: `'${Year}'!D1:E10`,
-  //     valueRenderOption: FORMATTED_VALUE,
-  //     auth: authClient,
-  //   };
-
-  //   try {
-  //     const response = (await sheets.spreadsheets.values.get(request)).data;
-  //     console.log(JSON.stringify(response, null, 2));
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // }
-  // useEffect(main, []);
-
-  const checkInVol = (newVolInfo) => {
-    // this will become a post function
+  const checkInVol = async (newVolInfo) => {
+    // update the UI
     const newVols = [...checkedInVols];
     const newVolJSON = { ...newVolInfo };
     newVols.push(newVolJSON);
     setCheckedInVols(newVols);
+
+    // post to the Google Sheet
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(`/api/PostVolCheckIn?volObj=${newVolInfo}`);
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const result = await response.json();
+      setResults(result);
+      setIsSubmitting(false);
+    } catch (error) {
+      setIsSubmitting(false);
+      setError({ error: true, message: error.message });
+    }
   };
 
   const markVolsChecked = (volFullName) => {
