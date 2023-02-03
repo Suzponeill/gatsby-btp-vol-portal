@@ -19,13 +19,13 @@ const IndexPage = () => {
 
     try {
       const response = await fetch(
-        `/api/PostVolCheckIn?name=${newVolInfo.first}`
+        `/api/PostVolCheckIn?first_name=${newVolInfo.first}`
       );
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const data = await response.json();
-      console.log(data.message);
+      console.log(data.data);
     } catch (error) {}
     // post to the Google Sheet
     // try {
