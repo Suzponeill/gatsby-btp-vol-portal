@@ -1,6 +1,5 @@
-import * as React from "react";
+import React, { useState } from "react";
 import "../components/Index.css";
-import { useState } from "react";
 import CheckedInList from "../components/CheckedInList";
 import InputForm from "../components/InputForm";
 
@@ -8,9 +7,10 @@ const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [results, setResults] = useState(null);
-  const [error, setError] = useState(false);
+  const [isError, setIsError] = useState(false);
 
   const checkInVol = async (newVolInfo) => {
+    setIsSubmitting(true);
     // update the UI
     const newVols = [...checkedInVols];
     const newVolJSON = { ...newVolInfo };
@@ -18,9 +18,11 @@ const IndexPage = () => {
     setCheckedInVols(newVols);
 
     // post to the Google Sheet
-    setIsSubmitting(true);
     try {
-      const response = await fetch(`/api/PostVolCheckIn?volObj=${newVolInfo}`);
+      const response = await fetch(
+        `/api/PostVolCheckIn?first=${newVolInfo.first}`
+      );
+      console.log(`line 24: ${response.status}`);
       if (!response.ok) {
         throw new Error(response.statusText);
       }
@@ -29,7 +31,7 @@ const IndexPage = () => {
       setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
-      setError({ error: true, message: error.message });
+      setIsError({ error: true, message: error.message });
     }
   };
 
@@ -64,7 +66,12 @@ const IndexPage = () => {
         <h2 id="Header-subtitle">VOLUNTEER CHECK IN</h2>
       </header>
       <div className="body">
-        <InputForm id="Input" checkInVolCallBackFunc={checkInVol} />
+        <InputForm
+          isSubmitting={isSubmitting}
+          isError={isError.error}
+          id="Input"
+          checkInVolCallBackFunc={checkInVol}
+        />
         <div id="CheckedIn-Container">
           <h2 id="list-label">CURRENTLY CHECKED IN</h2>
           <CheckedInList

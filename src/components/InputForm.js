@@ -87,7 +87,12 @@ const InputForm = (props) => {
           <option value="Intern">Intern</option>
         </select>
 
-        <button id="Check-in-button" type="submit" value="Check In Volunteer">
+        <button
+          disabled={props.isSubmitting || props.isError}
+          id="Check-in-button"
+          type="submit"
+          value="Check In Volunteer"
+        >
           CHECK IN
         </button>
       </form>

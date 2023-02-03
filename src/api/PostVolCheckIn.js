@@ -5,14 +5,13 @@ let Year = new Date().getFullYear();
 
 export default async function handler(req, res) {
   const {
-    query: { date, first, last, volType, start },
+    query: { first },
   } = req;
 
   try {
-    if (!first || !last) {
-      throw new Error();
-    }
-
+    // if (!first || !last) {
+    //   throw new Error();
+    // }
     await doc.useServiceAccountAuth({
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
       private_key: process.env.GOOGLE_SERVICE_PRIVATE_KEY.replace(
@@ -21,8 +20,8 @@ export default async function handler(req, res) {
       ),
     });
 
-    await doc.loadInfo();
-    console.log(doc.title);
+    // await doc.loadInfo();
+
     // const sheet = doc.sheetsByTitle(`${Year}`);
     // const rows = await sheet.getRows();
     // const raw_data = rows[0]._rawData;
@@ -31,9 +30,7 @@ export default async function handler(req, res) {
 
     // // This is where I need to customize the function to find the next empty row and add date, first, last, volType
 
-    res
-      .status(200)
-      .json({ message: "Volunteer Checkin added to Google Sheet!" });
+    res.status(203).json({ message: "ok!" });
   } catch (error) {
     res.status(500).json(error);
   }
