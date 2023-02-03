@@ -1,13 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../components/Index.css";
 import CheckedInList from "../components/CheckedInList";
 import InputForm from "../components/InputForm";
 
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(true);
   // const [results, setResults] = useState(null);
   const [isError, setIsError] = useState(false);
+
+  const getCheckedInVols = async () => {
+    try {
+      const response = await fetch(
+        `api/GetCheckedInVols?this_year=${new Date().getFullYear}`
+      );
+
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const data = await response.json();
+      console.log(data.body);
+      // setCheckedInVols(response.body)
+      setIsSubmitting(false);
+    } catch (error) {
+      setIsSubmitting(false);
+      setIsError({ error: true, message: error.message });
+      console.log(error.message);
+    }
+  };
+  useEffect(getCheckedInVols, []);
 
   const checkInVol = async (newVolInfo) => {
     setIsSubmitting(true);

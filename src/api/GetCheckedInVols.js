@@ -4,11 +4,11 @@ const Year = new Date().getFullYear;
 
 export default async function handler(req, res) {
   const {
-    query: { first_name },
+    query: { this_year },
   } = req;
 
   try {
-    if (!first_name) {
+    if (!this_year) {
       throw new Error();
     }
 
@@ -21,10 +21,16 @@ export default async function handler(req, res) {
     });
 
     await doc.loadInfo();
-    const sheet = doc.sheetsByTitle["2023"];
-    await sheet.loadCells("A2:J3600");
+    const sheet = doc.sheetsByTitle[`${this_year}`];
     const max_row = sheet.getCellByA1("A3600").value;
-    const last_first = sheet.getCell(max_row, 4).value;
+    await sheet.loadCells(`A2:J${max_row}`);
+    // response body needs to be an array of ojects
+    {
+      date: 1,
+      first: 4,
+      last: 5,
+      start: 6
+    }
 
     res.status(201).json({
       message: "A ok!",
