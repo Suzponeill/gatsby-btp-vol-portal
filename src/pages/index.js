@@ -6,7 +6,7 @@ import InputForm from "../components/InputForm";
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [results, setResults] = useState(null);
+  // const [results, setResults] = useState(null);
   const [isError, setIsError] = useState(false);
 
   const checkInVol = async (newVolInfo) => {
@@ -17,22 +17,32 @@ const IndexPage = () => {
     newVols.push(newVolJSON);
     setCheckedInVols(newVols);
 
-    // post to the Google Sheet
     try {
       const response = await fetch(
-        `/api/PostVolCheckIn?first=${newVolInfo.first}`
+        `/api/PostVolCheckIn?name=${newVolInfo.first}`
       );
-      console.log(`line 24: ${response.status}`);
       if (!response.ok) {
         throw new Error(response.statusText);
       }
-      const result = await response.json();
-      setResults(result);
-      setIsSubmitting(false);
-    } catch (error) {
-      setIsSubmitting(false);
-      setIsError({ error: true, message: error.message });
-    }
+      const data = await response.json();
+      console.log(data.message);
+    } catch (error) {}
+    // post to the Google Sheet
+    // try {
+    //   const response = await fetch(
+    //     `/api/PostVolCheckIn?first=${newVolInfo.first}`
+    //   );
+    //   if (!response.ok) {
+    //     throw new Error(response.statusText);
+    //   }
+    //   const result = await response.json();
+    //   console.log(`line 31: ${response}`);
+    //   // setResults(result);
+    //   // setIsSubmitting(false);
+    // } catch (error) {
+    //   setIsSubmitting(false);
+    //   setIsError({ error: true, message: error.message });
+    // }
   };
 
   const markVolsChecked = (volFullName) => {
