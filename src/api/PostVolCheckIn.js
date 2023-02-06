@@ -5,11 +5,11 @@ const thisYear = today.getFullYear();
 
 export default async function handler(req, res) {
   const {
-    query: { first_name },
+    query: { First_name, Last_name, volType, start, date },
   } = req;
 
   try {
-    if (!first_name) {
+    if (!First_name) {
       throw new Error();
     }
 
@@ -24,12 +24,19 @@ export default async function handler(req, res) {
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
+    const rows = await sheet.getRows();
     const max_row = sheet.getCellByA1("A3600").value;
-    const last_first = sheet.getCell(max_row, 4).value;
+    rows[max_row].First_name = First_name;
+    rows[max_row].Last_name = Last_name;
+    rows[max_row].Type = volType;
+    rows[max_row].Date = date;
+    rows[max_row].Start = start;
+    await rows[max_row].save();
+    const shiftId = max_row + 1;
 
     res.status(201).json({
-      message: "A ok!",
-      data: `${first_name} checked in`,
+      message: `${First_name} checked in`,
+      shiftId: shiftId,
     });
   } catch (error) {
     res.status(500).json(error);

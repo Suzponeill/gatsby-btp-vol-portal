@@ -6,64 +6,53 @@ import InputForm from "../components/InputForm";
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(true);
-  // const [results, setResults] = useState(null);
   const [isError, setIsError] = useState(false);
 
   // Make API call to see if there are any volunteers currently checked in
-  const getCheckedInVols = async () => {
-    try {
-      const response = await fetch(`/api/GetCheckedInVols?name=Suzanne`);
+  useEffect(() => {
+    async function getCheckedInVols() {
+      try {
+        const response = await fetch(`/api/GetCheckedInVols?name=Suzanne`);
 
-      if (!response.ok) {
-        throw new Error(response.statusText);
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        const data = await response.json();
+        console.log(data.message);
+        setCheckedInVols(data.data);
+        setIsSubmitting(false);
+      } catch (error) {
+        setIsSubmitting(false);
+        setIsError({ error: true, message: error.message });
+        console.log(error.message);
       }
-      const data = await response.json();
-      console.log(data.message);
-      setCheckedInVols(data.data);
-      setIsSubmitting(false);
-    } catch (error) {
-      setIsSubmitting(false);
-      setIsError({ error: true, message: error.message });
-      console.log(error.message);
     }
-  };
-  useEffect(getCheckedInVols, []);
+    getCheckedInVols();
+  }, []);
 
+  // Make API call to Check in Volunteers
   const checkInVol = async (newVolInfo) => {
     setIsSubmitting(true);
-    // update the UI
-    const newVols = [...checkedInVols];
-    const newVolJSON = { ...newVolInfo };
-    newVols.push(newVolJSON);
-    setCheckedInVols(newVols);
-
     try {
       const response = await fetch(
-        `/api/PostVolCheckIn?first_name=${newVolInfo.first}`
+        `/api/PostVolCheckIn?First_name=${newVolInfo.first}&Last_name=${newVolInfo.last}&date=${newVolInfo.date}&volType=${newVolInfo.volType}&start=${newVolInfo.start}`
       );
       if (!response.ok) {
         throw new Error(response.statusText);
       }
-      const data = await response.json();
-      console.log(data.data);
-    } catch (error) {}
-
-    // post to the Google Sheet
-    // try {
-    //   const response = await fetch(
-    //     `/api/PostVolCheckIn?first=${newVolInfo.first}`
-    //   );
-    //   if (!response.ok) {
-    //     throw new Error(response.statusText);
-    //   }
-    //   const result = await response.json();
-    //   console.log(`line 31: ${response}`);
-    //   // setResults(result);
-    //   // setIsSubmitting(false);
-    // } catch (error) {
-    //   setIsSubmitting(false);
-    //   setIsError({ error: true, message: error.message });
-    // }
+      const result = await response.json();
+      console.log(`line 31: ${result.shiftId}`);
+      setIsSubmitting(false);
+      // update the UI
+      const newVols = [...checkedInVols];
+      const newVolJSON = { ...newVolInfo };
+      // newVolJSON[shiftId] = result.shiftId;
+      newVols.push(newVolJSON);
+      setCheckedInVols(newVols);
+    } catch (error) {
+      setIsSubmitting(false);
+      setIsError({ error: true, message: error.message });
+    }
   };
 
   const markVolsChecked = (volFullName) => {
