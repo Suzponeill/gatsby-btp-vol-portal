@@ -1,6 +1,7 @@
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
-const Year = new Date().getFullYear;
+const today = new Date();
+const thisYear = today.getFullYear();
 
 export default async function handler(req, res) {
   const {
@@ -21,14 +22,14 @@ export default async function handler(req, res) {
     });
 
     await doc.loadInfo();
-    const sheet = doc.sheetsByTitle["2023"];
+    const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
     const max_row = sheet.getCellByA1("A3600").value;
     const last_first = sheet.getCell(max_row, 4).value;
 
     res.status(201).json({
       message: "A ok!",
-      data: `the last first name is ${last_first}`,
+      data: `${first_name} checked in`,
     });
   } catch (error) {
     res.status(500).json(error);

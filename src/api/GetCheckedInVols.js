@@ -1,14 +1,15 @@
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
-const Year = new Date().getFullYear;
+const today = new Date();
+const thisYear = today.getFullYear();
 
 export default async function handler(req, res) {
   const {
-    query: { this_year },
+    query: { name },
   } = req;
 
   try {
-    if (!this_year) {
+    if (!name) {
       throw new Error();
     }
 
@@ -21,29 +22,31 @@ export default async function handler(req, res) {
     });
 
     await doc.loadInfo();
-    const sheet = doc.sheetsByTitle[`${this_year}`];
+    const sheet = doc.sheetsByTitle[thisYear];
+    const rows = await sheet.getRows();
+    await sheet.loadCells("A2:J3600");
     const max_row = sheet.getCellByA1("A3600").value;
-    await sheet.loadCells(`A2:J${max_row}`);
-    // response body needs to be an array of ojects
-    {
-      date: 1,
-      first: 4,
-      last: 5,
-      start: 6
+
+    let noEndTimeList = [];
+    for (let i = 0; i < max_row; i++) {
+      if (
+        rows[i].First_name != "" &&
+        rows[i].Start != "" &&
+        rows[i].End === ""
+      ) {
+        noEndTimeList.push({
+          shift_id: rows[i].shift_id,
+          fullName: `${rows[i].First_name} ${rows[i].Last_name}`,
+          start: rows[i].Start,
+        });
+      }
     }
 
     res.status(201).json({
       message: "A ok!",
-      data: `the last first name is ${last_first}`,
+      data: noEndTimeList,
     });
   } catch (error) {
     res.status(500).json(error);
   }
 }
-
-// const rows = await sheet.getRows();
-// const raw_data = rows[0]._rawData;
-// const header_values = rows[0]._sheet.headerValues;
-// const row_value = rows[0][id];
-
-// This is where I need to customize the function to find the next empty row and add date, first, last, volType

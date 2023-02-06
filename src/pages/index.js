@@ -9,18 +9,17 @@ const IndexPage = () => {
   // const [results, setResults] = useState(null);
   const [isError, setIsError] = useState(false);
 
+  // Make API call to see if there are any volunteers currently checked in
   const getCheckedInVols = async () => {
     try {
-      const response = await fetch(
-        `api/GetCheckedInVols?this_year=${new Date().getFullYear}`
-      );
+      const response = await fetch(`/api/GetCheckedInVols?name=Suzanne`);
 
       if (!response.ok) {
         throw new Error(response.statusText);
       }
       const data = await response.json();
-      console.log(data.body);
-      // setCheckedInVols(response.body)
+      console.log(data.message);
+      setCheckedInVols(data.data);
       setIsSubmitting(false);
     } catch (error) {
       setIsSubmitting(false);
@@ -48,6 +47,7 @@ const IndexPage = () => {
       const data = await response.json();
       console.log(data.data);
     } catch (error) {}
+
     // post to the Google Sheet
     // try {
     //   const response = await fetch(
