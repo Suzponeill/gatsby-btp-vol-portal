@@ -2,13 +2,12 @@ const { GoogleSpreadsheet } = require("google-spreadsheet");
 const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
 const today = new Date();
 const thisYear = today.getFullYear();
+const endNow = today.getHours() + ":" + today.getMinutes();
 
 export default async function handler(req, res) {
   const {
     query: { shiftId },
   } = req;
-
-  // const end = today.getHours() + ":" + today.getMinutes();
 
   try {
     if (!shiftId) {
@@ -23,18 +22,17 @@ export default async function handler(req, res) {
       ),
     });
 
-    const rowIndex = shiftId - 10;
+    const rowIndex = shiftId - 1;
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
-    const troubleshoothing = rows[rowIndex].First_name;
-    // rows[key].End = end;
-    // await rows[key].save();
+    rows[rowIndex].End = endNow;
+    await rows[rowIndex].save();
 
     res.status(200).json({
-      message: `${troubleshoothing}`,
-      // endTime: `${rows[key].End}`,
+      message: `${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
+      endTime: `${endNow}`,
     });
   } catch (error) {
     res.status(500).json(error);

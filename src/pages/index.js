@@ -69,11 +69,9 @@ const IndexPage = () => {
   const checkOutVols = async () => {
     let newCheckedInVols = [];
     for (const volunteer of checkedInVols) {
-      console.log(volunteer);
       if (volunteer.checked === false) {
         newCheckedInVols.push(volunteer);
       } else {
-        console.log(volunteer.shiftId);
         try {
           const response = await fetch(
             `/api/CheckOutVols?shiftId=${volunteer.shiftId}`
