@@ -26,17 +26,17 @@ export default async function handler(req, res) {
     await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
     const max_row = sheet.getCellByA1("A3600").value;
+    rows[max_row].shift_id = max_row + 1;
+    rows[max_row].Date = date;
     rows[max_row].First_name = First_name;
     rows[max_row].Last_name = Last_name;
-    rows[max_row].Type = volType;
-    rows[max_row].Date = date;
     rows[max_row].Start = start;
+    rows[max_row].Type = volType;
     await rows[max_row].save();
-    const shiftId = max_row + 1;
 
     res.status(201).json({
       message: `${First_name} checked in`,
-      shiftId: shiftId,
+      shiftId: max_row + 1,
     });
   } catch (error) {
     res.status(500).json(error);

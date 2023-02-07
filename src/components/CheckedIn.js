@@ -5,14 +5,11 @@ const CheckedIn = (props) => {
   const volFullName = props.fullName;
   const volStart = props.start;
   const volChecked = props.checked;
+  const shiftId = props.shiftId;
   const markVolsCheckedfunc = props.markVolsCheckedfunc;
 
-  // const [checkedState, setCheckedState] = useState(volChecked);
-
   const handleChange = () => {
-    markVolsCheckedfunc(volFullName);
-    // setCheckedState(volChecked);
-    console.log(volChecked);
+    markVolsCheckedfunc(shiftId);
   };
 
   return (
@@ -35,7 +32,6 @@ const CheckedIn = (props) => {
 
 CheckedIn.propTypes = {
   fullName: PropTypes.string.isRequired,
-  date: PropTypes.string.isRequired,
   start: PropTypes.string.isRequired,
 };
 

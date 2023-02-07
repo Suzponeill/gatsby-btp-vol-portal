@@ -5,11 +5,13 @@ const thisYear = today.getFullYear();
 
 export default async function handler(req, res) {
   const {
-    query: { name },
+    query: { shiftId },
   } = req;
 
+  // const end = today.getHours() + ":" + today.getMinutes();
+
   try {
-    if (!name) {
+    if (!shiftId) {
       throw new Error();
     }
 
@@ -21,30 +23,19 @@ export default async function handler(req, res) {
       ),
     });
 
+    const rowIndex = Number(shiftId);
+    rowIndex = rowIndex - 10;
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
-    const rows = await sheet.getRows();
     await sheet.loadCells("A2:J3600");
-    const max_row = sheet.getCellByA1("A3600").value;
+    const rows = await sheet.getRows();
+    // const troubleshoothing = rows[rowIndex].First_name;
+    // rows[key].End = end;
+    // await rows[key].save();
 
-    let noEndTimeList = [];
-    for (let i = 0; i < max_row; i++) {
-      if (
-        rows[i].First_name != "" &&
-        rows[i].Start != "" &&
-        rows[i].End === ""
-      ) {
-        noEndTimeList.push({
-          shiftId: rows[i].shift_id,
-          fullName: `${rows[i].First_name} ${rows[i].Last_name}`,
-          start: rows[i].Start,
-        });
-      }
-    }
-
-    res.status(201).json({
-      message: "Checked in Volunteers fetched!",
-      data: noEndTimeList,
+    res.status(200).json({
+      message: `ok. rowIndex is ${rowIndex}`,
+      // endTime: `${rows[key].End}`,
     });
   } catch (error) {
     res.status(500).json(error);

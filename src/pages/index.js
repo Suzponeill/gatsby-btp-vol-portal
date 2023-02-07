@@ -41,12 +41,11 @@ const IndexPage = () => {
         throw new Error(response.statusText);
       }
       const result = await response.json();
-      console.log(`line 31: ${result.shiftId}`);
       setIsSubmitting(false);
       // update the UI
       const newVols = [...checkedInVols];
       const newVolJSON = { ...newVolInfo };
-      // newVolJSON[shiftId] = result.shiftId;
+      newVolJSON["shiftId"] = await result.shiftId;
       newVols.push(newVolJSON);
       setCheckedInVols(newVols);
     } catch (error) {
@@ -55,9 +54,10 @@ const IndexPage = () => {
     }
   };
 
-  const markVolsChecked = (volFullName) => {
+  // UI & state update of check out check box toggle passed as prop to CheckedInList
+  const markVolsChecked = async (volShiftId) => {
     const newcheckedInVols = checkedInVols.map((volunteer) => {
-      if (volunteer.fullName === volFullName) {
+      if (volunteer.shiftId === volShiftId) {
         volunteer.checked = !volunteer.checked;
       }
       return volunteer;
@@ -65,15 +65,29 @@ const IndexPage = () => {
     setCheckedInVols(newcheckedInVols);
   };
 
-  const checkOutVols = () => {
-    const today = new Date();
+  // Check Volunteers Out
+  const checkOutVols = async () => {
     let newCheckedInVols = [];
     for (const volunteer of checkedInVols) {
+      console.log(volunteer);
       if (volunteer.checked === false) {
         newCheckedInVols.push(volunteer);
       } else {
-        volunteer.end = today.getHours() + ":" + today.getMinutes();
-        // make a patch request to the csv
+        try {
+          const response = await fetch(
+            `/api/CheckOutVols?shfitId=${volunteer.shiftId}`
+          );
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+          const result = await response.json();
+          console.log(result.message);
+          // const updatedVol = { ...volunteer };
+          // updatedVol["end"] = result.endTime;
+          // newCheckedInVols.push(updatedVol);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
     setCheckedInVols(newCheckedInVols);

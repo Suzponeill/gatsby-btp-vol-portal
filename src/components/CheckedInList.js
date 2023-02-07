@@ -7,6 +7,8 @@ const CheckedInList = (props) => {
   for (const volunteer of props.checkedInVols) {
     volunteerComponents.push(
       <CheckedIn
+        key={volunteer.shiftId}
+        shiftId={volunteer.shiftId}
         first={volunteer.first}
         last={volunteer.last}
         fullName={volunteer.fullName}
