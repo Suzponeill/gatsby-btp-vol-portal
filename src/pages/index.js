@@ -81,9 +81,6 @@ const IndexPage = () => {
           }
           const result = await response.json();
           console.log(result.message);
-          // const updatedVol = { ...volunteer };
-          // updatedVol["end"] = result.endTime;
-          // newCheckedInVols.push(updatedVol);
         } catch (error) {
           console.log(error);
         }

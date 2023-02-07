@@ -35,7 +35,11 @@ const InputForm = (props) => {
       today.getDate() +
       "/" +
       today.getFullYear();
-    submitVal["start"] = today.getHours() + ":" + today.getMinutes();
+    submitVal["start"] = today.toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
     submitVal["end"] = null;
     submitVal["checked"] = false;
     if (typeSelected === undefined) {
