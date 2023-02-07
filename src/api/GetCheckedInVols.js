@@ -38,6 +38,7 @@ export default async function handler(req, res) {
           shiftId: rows[i].shift_id,
           fullName: `${rows[i].First_name} ${rows[i].Last_name}`,
           start: rows[i].Start,
+          checked: false,
         });
       }
     }

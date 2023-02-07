@@ -23,18 +23,17 @@ export default async function handler(req, res) {
       ),
     });
 
-    const rowIndex = Number(shiftId);
-    rowIndex = rowIndex - 10;
+    const rowIndex = shiftId - 10;
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
-    // const troubleshoothing = rows[rowIndex].First_name;
+    const troubleshoothing = rows[rowIndex].First_name;
     // rows[key].End = end;
     // await rows[key].save();
 
     res.status(200).json({
-      message: `ok. rowIndex is ${rowIndex}`,
+      message: `${troubleshoothing}`,
       // endTime: `${rows[key].End}`,
     });
   } catch (error) {

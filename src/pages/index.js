@@ -73,9 +73,10 @@ const IndexPage = () => {
       if (volunteer.checked === false) {
         newCheckedInVols.push(volunteer);
       } else {
+        console.log(volunteer.shiftId);
         try {
           const response = await fetch(
-            `/api/CheckOutVols?shfitId=${volunteer.shiftId}`
+            `/api/CheckOutVols?shiftId=${volunteer.shiftId}`
           );
           if (!response.ok) {
             throw new Error(response.statusText);
