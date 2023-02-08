@@ -7,6 +7,7 @@ const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [checkedInCount, setCheckedInCount] = useState("");
 
   // Make API call to see if there are any volunteers currently checked in
   useEffect(() => {
@@ -19,6 +20,7 @@ const IndexPage = () => {
         }
         const data = await response.json();
         console.log(data.message);
+        setCheckedInCount(data.data.length);
         setCheckedInVols(data.data);
         setIsSubmitting(false);
       } catch (error) {
@@ -49,6 +51,7 @@ const IndexPage = () => {
       newVolJSON["shiftId"] = await result.shiftId;
       newVols.push(newVolJSON);
       setCheckedInVols(newVols);
+      setCheckedInCount(newVols.length);
     } catch (error) {
       setIsSubmitting(false);
       setIsError({ error: true, message: error.message });
@@ -64,13 +67,13 @@ const IndexPage = () => {
       return volunteer;
     });
     setCheckedInVols(newcheckedInVols);
+    setCheckedInCount(newcheckedInVols.length);
   };
 
   // Check Volunteers Out
   const checkOutVols = async () => {
     let newCheckedInVols = [];
     for (const volunteer of checkedInVols) {
-      console.log(volunteer);
       if (volunteer.checked === false) {
         newCheckedInVols.push(volunteer);
       } else {
@@ -89,6 +92,7 @@ const IndexPage = () => {
       }
     }
     setCheckedInVols(newCheckedInVols);
+    setCheckedInCount(newCheckedInVols.length);
   };
 
   return (
@@ -105,7 +109,16 @@ const IndexPage = () => {
           checkInVolCallBackFunc={checkInVol}
         />
         <div id="CheckedIn-Container">
-          <h2 id="list-label">CURRENTLY CHECKED IN</h2>
+          <h2 id="list-label">
+            {checkedInCount === 1
+              ? checkedInCount + " VOLUNTEER "
+              : checkedInCount === 0
+              ? "NO VOLUNTEERS "
+              : checkedInCount > 1
+              ? checkedInCount + " VOLUNTEERS "
+              : ""}
+            CURRENTLY CHECKED IN
+          </h2>
           <CheckedInList
             markVolsCheckedfunc={markVolsChecked}
             checkedInVols={checkedInVols}
