@@ -75,7 +75,7 @@ const IndexPage = () => {
       } else {
         try {
           const response = await fetch(
-            `/api/CheckOutVols?shiftId=${volunteer.shiftId}`
+            `/api/CheckOutVols?shiftId=${volunteer.shiftId}&start=${volunteer.start}`
           );
           if (!response.ok) {
             throw new Error(response.statusText);
