@@ -1,7 +1,5 @@
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
-const today = new Date();
-const thisYear = today.getFullYear();
 
 export default async function handler(req, res) {
   const {
@@ -21,21 +19,39 @@ export default async function handler(req, res) {
       ),
     });
 
+    const today = new Date();
+    const thisYear = today.getFullYear();
+    const thisWeekday = today.toLocaleString("default", { weekday: "long" });
+    const shiftTime = start >= "3:30 PM" ? "PM" : "AM";
+
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
-    const max_row = sheet.getCellByA1("A3600").value;
-    rows[max_row].shift_id = max_row + 1;
+
+    let max_row = 0;
+    for (let i = 0; i < 350; i++) {
+      if (rows[i].shift_id === "-") {
+        break;
+      } else {
+        max_row = rows[i].shift_id;
+      }
+    }
+
+    rows[max_row].shift_id = Number(max_row) + 1;
     rows[max_row].Date = date;
+    rows[max_row].Month = today.toLocaleString("default", { month: "long" });
+    rows[max_row].Weekday = thisWeekday;
     rows[max_row].First_name = First_name;
     rows[max_row].Last_name = Last_name;
     rows[max_row].Start = start;
     rows[max_row].Type = volType;
+    rows[max_row].No_signout = "Y";
+    rows[max_row].Shift = `${thisWeekday}-${shiftTime}`;
     await rows[max_row].save();
 
     res.status(201).json({
-      message: `${First_name} checked in`,
+      message: `max_row is ${max_row}`,
       shiftId: max_row + 1,
     });
   } catch (error) {

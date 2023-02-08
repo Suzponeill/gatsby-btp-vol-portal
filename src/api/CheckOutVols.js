@@ -2,7 +2,11 @@ const { GoogleSpreadsheet } = require("google-spreadsheet");
 const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
 const today = new Date();
 const thisYear = today.getFullYear();
-const endNow = today.getHours() + ":" + today.getMinutes();
+const endNow = today.toLocaleString("en-US", {
+  hour: "numeric",
+  minute: "numeric",
+  hour12: true,
+});
 
 export default async function handler(req, res) {
   const {

@@ -41,6 +41,7 @@ const IndexPage = () => {
         throw new Error(response.statusText);
       }
       const result = await response.json();
+      console.log(result.message);
       setIsSubmitting(false);
       // update the UI
       const newVols = [...checkedInVols];
@@ -125,4 +126,4 @@ const IndexPage = () => {
 
 export default IndexPage;
 
-export const Head = () => <title>Home Page</title>;
+export const Head = () => <title>Volunteer Check In</title>;

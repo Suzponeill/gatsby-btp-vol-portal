@@ -25,7 +25,17 @@ export default async function handler(req, res) {
     const sheet = doc.sheetsByTitle[thisYear];
     const rows = await sheet.getRows();
     await sheet.loadCells("A2:J3600");
-    const max_row = sheet.getCellByA1("A3600").value;
+
+    // find the last populated row of data
+    let max_row = 0;
+    for (let i = 0; i < 350; i++) {
+      if (rows[i].shift_id === "-") {
+        break;
+      } else {
+        max_row = rows[i].shift_id;
+      }
+    }
+    max_row -= 1;
 
     let noEndTimeList = [];
     for (let i = 0; i < max_row; i++) {
@@ -44,7 +54,7 @@ export default async function handler(req, res) {
     }
 
     res.status(201).json({
-      message: "Checked in Volunteers fetched!",
+      message: `Checked in Volunteers fetched!`,
       data: noEndTimeList,
     });
   } catch (error) {
