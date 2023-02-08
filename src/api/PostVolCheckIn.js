@@ -21,12 +21,29 @@ export default async function handler(req, res) {
 
     const today = new Date();
     const thisYear = today.getFullYear();
+    const monthName = today.toLocaleString("default", { month: "long" });
+    const monthNum =
+      today.getMonth() + 1 < 10
+        ? `0${today.getMonth() + 1}`
+        : today.getMonth() + 1;
+
     const thisWeekday = today.toLocaleString("default", { weekday: "long" });
-    const shiftTime = start >= "3:30 PM" ? "PM" : "AM";
+    const hours = today.getHours();
+    const minutes = today.getMinutes();
+    const shift = hours < 15 && minutes < 30 ? "AM" : "PM";
+
+    const getStartRnd = () => {
+      let m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
+      m = m < 10 ? "0" + m : m;
+      let h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
+      const shiftRnd = h < 12 ? "AM" : "PM";
+      h = h < 10 ? "0" + h : h > 12 ? (h -= 12) : h;
+      return `${h}:${m} ${shiftRnd}`;
+    };
 
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
-    await sheet.loadCells("A2:J3600");
+    await sheet.loadCells("A2:K3600");
     const rows = await sheet.getRows();
 
     let max_row = 0;
@@ -40,28 +57,24 @@ export default async function handler(req, res) {
 
     rows[max_row].shift_id = Number(max_row) + 1;
     rows[max_row].Date = date;
-    rows[max_row].Month = today.toLocaleString("default", { month: "long" });
+    rows[max_row].Month = monthName;
     rows[max_row].Weekday = thisWeekday;
     rows[max_row].First_name = First_name;
     rows[max_row].Last_name = Last_name;
     rows[max_row].Start = start;
     rows[max_row].Type = volType;
     rows[max_row].No_signout = "Y";
-    rows[max_row].Shift = `${thisWeekday}-${shiftTime}`;
+    rows[max_row].Shift = `${thisWeekday}-${shift}`;
+    rows[max_row].Start_Rnd = getStartRnd();
+    rows[max_row].End_Rnd = "null";
+    rows[max_row].Digit_Month = `${monthNum} ${monthName}`;
     await rows[max_row].save();
 
     res.status(201).json({
-      message: `max_row is ${max_row}`,
+      message: `${First_name} ${Last_name} is checked in`,
       shiftId: max_row + 1,
     });
   } catch (error) {
     res.status(500).json(error);
   }
 }
-
-// const rows = await sheet.getRows();
-// const raw_data = rows[0]._rawData;
-// const header_values = rows[0]._sheet.headerValues;
-// const row_value = rows[0][id];
-
-// This is where I need to customize the function to find the next empty row and add date, first, last, volType

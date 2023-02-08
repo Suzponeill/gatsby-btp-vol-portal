@@ -38,7 +38,7 @@ export default async function handler(req, res) {
     max_row -= 1;
 
     let noEndTimeList = [];
-    for (let i = 0; i < max_row; i++) {
+    for (let i = 0; i <= max_row; i++) {
       if (
         rows[i].First_name != "" &&
         rows[i].Start != "" &&
