@@ -54,6 +54,8 @@ export default async function handler(req, res) {
         max_row = rows[i].shift_id;
       }
     }
+    const rowIndex = Number(max_row) + 2;
+    const DOYROWFormula = `=if(B${rowIndex}="", "",DAY(B${rowIndex}) + ((Month(B${rowIndex}) -1) * 30) + (MOD(row(),10) / 10))`;
 
     rows[max_row].shift_id = Number(max_row) + 1;
     rows[max_row].Date = date;
@@ -68,11 +70,12 @@ export default async function handler(req, res) {
     rows[max_row].Start_Rnd = getStartRnd();
     rows[max_row].End_Rnd = "null";
     rows[max_row].Digit_Month = `${monthNum} ${monthName}`;
+    rows[max_row].DOY_ROW = DOYROWFormula;
     await rows[max_row].save();
 
     res.status(201).json({
       message: `${First_name} ${Last_name} is checked in`,
-      shiftId: max_row + 1,
+      shiftId: rows[max_row].shift_id,
     });
   } catch (error) {
     res.status(500).json(error);
