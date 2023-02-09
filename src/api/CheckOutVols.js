@@ -7,8 +7,6 @@ const endNow = today.toLocaleString("en-US", {
   minute: "numeric",
   hour12: true,
 });
-const hours = today.getHours();
-const minutes = today.getMinutes();
 
 export default async function handler(req, res) {
   const {
@@ -29,6 +27,8 @@ export default async function handler(req, res) {
     });
 
     const getEndRnd = () => {
+      const hours = today.getHours();
+      const minutes = today.getMinutes();
       let m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
       m = m < 10 ? "0" + m : m;
       let h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
@@ -37,17 +37,24 @@ export default async function handler(req, res) {
       return `${h}:${m} ${shiftRnd}`;
     };
 
+    const calculateHours_Rnd = () => {
+      let startHour = Number(start.split(":", 1));
+      const startMins = Number(start.slice(-5, -3));
+      start.slice(-2) === "PM" ? (startHour += 12) : startHour;
+      const endHour = today.getHours();
+      const endMins = today.getMinutes();
+      const totalMins = (endMins - startMins) / 100;
+      const totalHours = endHour - startHour + totalMins;
+      return (Math.round(totalHours * 4) / 4).toFixed(2);
+    };
+
     const rowIndex = shiftId - 1;
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
-    const hoursRndFormula = `=(timevalue(N${rowIndex + 2})-timevalue(M${
-      rowIndex + 2
-    })) * 24`;
-
     rows[rowIndex].End = endNow;
-    rows[rowIndex].Hours_Rnd = hoursRndFormula;
+    rows[rowIndex].Hours_Rnd = calculateHours_Rnd();
     rows[rowIndex].No_signout = "N";
     rows[rowIndex].End_Rnd = getEndRnd();
     await rows[rowIndex].save();

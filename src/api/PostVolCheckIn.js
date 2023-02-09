@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   } = req;
 
   try {
-    if (!First_name) {
+    if (!First_name || !Last_name) {
       throw new Error();
     }
 
