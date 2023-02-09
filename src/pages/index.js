@@ -6,6 +6,7 @@ import InputForm from "../components/InputForm";
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(true);
+  const [isCheckingOut, setIsCheckingOut] = useState(true);
   const [isError, setIsError] = useState(false);
   const [checkedInCount, setCheckedInCount] = useState("");
 
@@ -23,8 +24,10 @@ const IndexPage = () => {
         setCheckedInCount(data.data.length);
         setCheckedInVols(data.data);
         setIsSubmitting(false);
+        setIsCheckingOut(false);
       } catch (error) {
         setIsSubmitting(false);
+        setIsCheckingOut(false);
         setIsError({ error: true, message: error.message });
         console.log(error.message);
       }
@@ -72,6 +75,7 @@ const IndexPage = () => {
 
   // Check Volunteers Out
   const checkOutVols = async () => {
+    setIsCheckingOut(true);
     let newCheckedInVols = [];
     for (const volunteer of checkedInVols) {
       if (volunteer.checked === false) {
@@ -91,9 +95,12 @@ const IndexPage = () => {
         }
       }
     }
+    setIsCheckingOut(false);
     setCheckedInVols(newCheckedInVols);
     setCheckedInCount(newCheckedInVols.length);
   };
+
+  const isDisabled = isCheckingOut ? "disabled" : "enabled";
 
   return (
     <div className="App">
@@ -123,7 +130,7 @@ const IndexPage = () => {
             markVolsCheckedfunc={markVolsChecked}
             checkedInVols={checkedInVols}
           />
-          <button onClick={checkOutVols} id="CheckOut">
+          <button onClick={checkOutVols} id="CheckOut" className={isDisabled}>
             CHECK OUT
           </button>
         </div>

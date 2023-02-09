@@ -52,6 +52,8 @@ const InputForm = (props) => {
     setTypeSelected("None");
   };
 
+  const isDisabled = props.isSubmitting ? "disabled" : "enabled";
+
   return (
     <>
       <h2 id="Input-label">ENTER VOLUNTEER NAME</h2>
@@ -96,6 +98,7 @@ const InputForm = (props) => {
           id="Check-in-button"
           type="submit"
           value="Check In Volunteer"
+          className={isDisabled}
         >
           CHECK IN
         </button>

@@ -28,11 +28,18 @@
   margin-top: 10px;
 }
 
+.enabled {
+  color: whitesmoke;
+}
+
+.disabled {
+  color: #a5a29d;
+}
+
 button {
   height: 31px;
   min-width: 100px;
   background-color: #980000;
-  color: whitesmoke;
   font-weight: bold;
 }
 

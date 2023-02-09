@@ -30,15 +30,14 @@ export default async function handler(req, res) {
     const thisWeekday = today.toLocaleString("default", { weekday: "long" });
     const hours = today.getHours();
     const minutes = today.getMinutes();
-    const shift = hours < 15 && minutes < 30 ? "AM" : "PM";
+    const shift = hours < 12 ? "AM" : "PM";
 
     const getStartRnd = () => {
       let m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
       m = m < 10 ? "0" + m : m;
       let h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
-      const shiftRnd = h < 12 ? "AM" : "PM";
       h = h < 10 ? "0" + h : h > 12 ? (h -= 12) : h;
-      return `${h}:${m} ${shiftRnd}`;
+      return `${h}:${m} ${shift}`;
     };
 
     await doc.loadInfo();
