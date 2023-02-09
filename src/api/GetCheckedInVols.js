@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
     // find the last populated row of data
     let max_row = 0;
-    for (let i = 0; i < 350; i++) {
+    for (let i = 0; i < 3500; i++) {
       if (rows[i].shift_id === "-") {
         break;
       } else {
