@@ -2,15 +2,10 @@ const { GoogleSpreadsheet } = require("google-spreadsheet");
 const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID);
 const today = new Date();
 const thisYear = today.getFullYear();
-const endNow = today.toLocaleString("en-US", {
-  hour: "numeric",
-  minute: "numeric",
-  hour12: true,
-});
 
 export default async function handler(req, res) {
   const {
-    query: { shiftId, start },
+    query: { shiftId, start, end },
   } = req;
 
   try {
@@ -53,7 +48,7 @@ export default async function handler(req, res) {
     const sheet = doc.sheetsByTitle[thisYear];
     await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
-    rows[rowIndex].End = endNow;
+    rows[rowIndex].End = end;
     rows[rowIndex].Hours_Rnd = calculateHours_Rnd();
     rows[rowIndex].No_signout = "N";
     rows[rowIndex].End_Rnd = getEndRnd();

@@ -59,6 +59,7 @@ const IndexPage = () => {
   // Make API call to Check in Volunteers
   const checkInVol = async (newVolInfo) => {
     setIsSubmitting(true);
+    console.log(newVolInfo);
     try {
       const response = await fetch(
         `/api/PostVolCheckIn?First_name=${newVolInfo.first}&Last_name=${newVolInfo.last}&date=${newVolInfo.date}&volType=${newVolInfo.volType}&start=${newVolInfo.start}`
@@ -97,6 +98,12 @@ const IndexPage = () => {
   // Check Volunteers Out
   const checkOutVols = async () => {
     setIsCheckingOut(true);
+    const endTime = new Date().toLocaleString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    console.log(endTime);
     let newCheckedInVols = [];
     for (const volunteer of checkedInVols) {
       if (volunteer.checked === false) {
@@ -104,7 +111,7 @@ const IndexPage = () => {
       } else {
         try {
           const response = await fetch(
-            `/api/CheckOutVols?shiftId=${volunteer.shiftId}&start=${volunteer.start}`
+            `/api/CheckOutVols?shiftId=${volunteer.shiftId}&start=${volunteer.start}&end=${endTime}`
           );
           if (!response.ok) {
             throw new Error(response.statusText);
