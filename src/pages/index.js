@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../components/Index.css";
 import CheckedInList from "../components/CheckedInList";
 import InputForm from "../components/InputForm";
+import LoginForm from "../components/Login";
 
 const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
@@ -9,6 +10,26 @@ const IndexPage = () => {
   const [isCheckingOut, setIsCheckingOut] = useState(true);
   const [isError, setIsError] = useState(false);
   const [checkedInCount, setCheckedInCount] = useState("");
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // Function to make API call to validate password
+  const LoginFunc = async (passwordInput) => {
+    try {
+      const response = await fetch(
+        `/api/CheckPassword?passwordInput=${passwordInput}`
+      );
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      const result = await response.json();
+      console.log(result.message);
+      setLoggedIn(result.validity);
+      return !result.validity;
+    } catch (error) {
+      console.log(error);
+      return true;
+    }
+  };
 
   // Make API call to see if there are any volunteers currently checked in
   useEffect(() => {
@@ -109,31 +130,44 @@ const IndexPage = () => {
         <h2 id="Header-subtitle">VOLUNTEER CHECK IN</h2>
       </header>
       <div className="body">
-        <InputForm
-          isSubmitting={isSubmitting}
-          isError={isError.error}
-          id="Input"
-          checkInVolCallBackFunc={checkInVol}
-        />
-        <div id="CheckedIn-Container">
-          <h2 id="list-label">
-            {checkedInCount === 1
-              ? checkedInCount + " VOLUNTEER "
-              : checkedInCount === 0
-              ? "NO VOLUNTEERS "
-              : checkedInCount > 1
-              ? checkedInCount + " VOLUNTEERS "
-              : ""}
-            CURRENTLY CHECKED IN
-          </h2>
-          <CheckedInList
-            markVolsCheckedfunc={markVolsChecked}
-            checkedInVols={checkedInVols}
-          />
-          <button onClick={checkOutVols} id="CheckOut" className={isDisabled}>
-            CHECK OUT
-          </button>
-        </div>
+        {!loggedIn && (
+          <>
+            <LoginForm loginCallBackFunc={LoginFunc} />
+          </>
+        )}
+        {loggedIn && (
+          <>
+            <InputForm
+              isSubmitting={isSubmitting}
+              isError={isError.error}
+              id="Input"
+              checkInVolCallBackFunc={checkInVol}
+            />
+            <div id="CheckedIn-Container">
+              <h2 id="list-label">
+                {checkedInCount === 1
+                  ? checkedInCount + " VOLUNTEER "
+                  : checkedInCount === 0
+                  ? "NO VOLUNTEERS "
+                  : checkedInCount > 1
+                  ? checkedInCount + " VOLUNTEERS "
+                  : ""}
+                CURRENTLY CHECKED IN
+              </h2>
+              <CheckedInList
+                markVolsCheckedfunc={markVolsChecked}
+                checkedInVols={checkedInVols}
+              />
+              <button
+                onClick={checkOutVols}
+                id="CheckOut"
+                className={isDisabled}
+              >
+                CHECK OUT
+              </button>
+            </div>
+          </>
+        )}
       </div>
       <footer>
         <h3>

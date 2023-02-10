@@ -105,6 +105,17 @@ input[type="checkbox"]:checked::before {
   text-align: center;
 }
 
+#failed_notice {
+  color: #980000;
+  margin-left: 15px;
+}
+
+#failed_p {
+  font-size: small;
+  font-style: italic;
+  margin-left: 15px;
+}
+
 footer {
   color: #a5a29d;
   text-align: center;
