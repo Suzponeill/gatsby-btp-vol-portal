@@ -14,6 +14,7 @@ const LoginForm = (props) => {
     e.preventDefault();
     const status = await props.loginCallBackFunc(formPWD);
     setIsError(status);
+    setFormPWD("");
   };
 
   return (
