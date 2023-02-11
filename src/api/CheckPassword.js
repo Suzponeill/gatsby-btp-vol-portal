@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle["Website_Access"];
-    await sheet.loadCells("A1:A2");
+    await sheet.loadCells("A2");
     const officialPasswordCell = sheet.getCellByA1("A2");
     const officialPassword = officialPasswordCell.value;
 

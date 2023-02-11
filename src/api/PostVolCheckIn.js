@@ -42,11 +42,10 @@ export default async function handler(req, res) {
 
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
-    await sheet.loadCells("A2:K3600");
     const rows = await sheet.getRows();
 
     let max_row = 0;
-    for (let i = 0; i < 350; i++) {
+    for (let i = 0; i < 3000; i++) {
       if (rows[i].shift_id === "-") {
         break;
       } else {

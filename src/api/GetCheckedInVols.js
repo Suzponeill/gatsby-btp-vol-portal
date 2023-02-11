@@ -24,7 +24,6 @@ export default async function handler(req, res) {
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
     const rows = await sheet.getRows();
-    await sheet.loadCells("A2:J3600");
 
     // find the last populated row of data
     let max_row = 0;

@@ -46,7 +46,6 @@ export default async function handler(req, res) {
     const rowIndex = shiftId - 1;
     await doc.loadInfo();
     const sheet = doc.sheetsByTitle[thisYear];
-    await sheet.loadCells("A2:J3600");
     const rows = await sheet.getRows();
     rows[rowIndex].End = end;
     rows[rowIndex].Hours_Rnd = calculateHours_Rnd();
@@ -56,7 +55,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({
       message: `${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
-      endTime: `${endNow}`,
+      endTime: `${end}`,
     });
   } catch (error) {
     res.status(500).json(error);
