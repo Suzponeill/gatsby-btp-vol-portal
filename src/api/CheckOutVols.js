@@ -21,9 +21,10 @@ export default async function handler(req, res) {
       ),
     });
 
+    const endhours = Number(end.split(":", 1));
+    const endMinutes = Number(end.slice(-5, -3));
+
     const getEndRnd = () => {
-      const endhours = Number(end.split(":", 1));
-      const endMinutes = Number(end.slice(-5, -3));
       let m = (parseInt((endMinutes + 7.5) / 15) * 15) % 60;
       m = m < 10 ? "0" + m : m;
       let h = endMinutes > 52 ? (endhours === 23 ? 0 : ++endhours) : endhours;
@@ -36,10 +37,8 @@ export default async function handler(req, res) {
       let startHour = Number(start.split(":", 1));
       const startMins = Number(start.slice(-5, -3));
       start.slice(-2) === "PM" ? (startHour += 12) : startHour;
-      const endHour = today.getHours();
-      const endMins = today.getMinutes();
-      const totalMins = (endMins - startMins) / 100;
-      const totalHours = endHour - startHour + totalMins;
+      const totalMins = (endMinutes - startMins) / 100;
+      const totalHours = endhours - startHour + totalMins;
       return (Math.round(totalHours * 4) / 4).toFixed(2);
     };
 
@@ -54,7 +53,7 @@ export default async function handler(req, res) {
     await rows[rowIndex].save();
 
     res.status(200).json({
-      message: `code push is registereing in deployment and ${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
+      message: `calcuclate hours fix deployed and ${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
       endTime: `${end}`,
     });
   } catch (error) {
