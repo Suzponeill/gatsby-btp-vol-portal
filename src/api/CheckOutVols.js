@@ -22,11 +22,11 @@ export default async function handler(req, res) {
     });
 
     const getEndRnd = () => {
-      const hours = today.getHours();
-      const minutes = today.getMinutes();
-      let m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
+      const endhours = Number(end.split(":", 1));
+      const endMinutes = Number(end.slice(-5, -3));
+      let m = (parseInt((endMinutes + 7.5) / 15) * 15) % 60;
       m = m < 10 ? "0" + m : m;
-      let h = minutes > 52 ? (hours === 23 ? 0 : ++hours) : hours;
+      let h = endMinutes > 52 ? (endhours === 23 ? 0 : ++endhours) : endhours;
       const shiftRnd = h < 12 ? "AM" : "PM";
       h = h < 10 ? "0" + h : h > 12 ? (h -= 12) : h;
       return `${h}:${m} ${shiftRnd}`;
@@ -54,7 +54,7 @@ export default async function handler(req, res) {
     await rows[rowIndex].save();
 
     res.status(200).json({
-      message: `${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
+      message: `code push is registereing in deployment and ${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
       endTime: `${end}`,
     });
   } catch (error) {

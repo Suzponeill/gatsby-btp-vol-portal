@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     const rows = await sheet.getRows();
 
     let max_row = 0;
-    for (let i = 0; i < 3000; i++) {
+    for (let i = 0; i < 2000; i++) {
       if (rows[i].shift_id === "-") {
         break;
       } else {
