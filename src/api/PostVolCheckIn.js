@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     const thisWeekday = today.toLocaleString("default", { weekday: "long" });
     const hours = Number(start.split(":", 1));
     const minutes = Number(start.slice(-5, -3));
-    const shift = start.slice(-2, -1);
+    const shift = start.slice(-2);
 
     const getStartRnd = () => {
       let m = (parseInt((minutes + 7.5) / 15) * 15) % 60;
