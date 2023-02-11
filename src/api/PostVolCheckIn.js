@@ -28,8 +28,8 @@ export default async function handler(req, res) {
         : today.getMonth() + 1;
 
     const thisWeekday = today.toLocaleString("default", { weekday: "long" });
-    const hours = today.getHours();
-    const minutes = today.getMinutes();
+    const hours = Number(start.split(":", 1));
+    const minutes = Number(start.slice(-5, -3));
     const shift = hours < 12 ? "AM" : "PM";
 
     const getStartRnd = () => {
