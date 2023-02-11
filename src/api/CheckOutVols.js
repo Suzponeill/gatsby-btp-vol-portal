@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     await rows[rowIndex].save();
 
     res.status(200).json({
-      message: `calcuclate hours fix deployed and ${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
+      message: `${rows[rowIndex].First_name} ${rows[rowIndex].Last_name} checked out at ${rows[rowIndex].End}`,
       endTime: `${end}`,
     });
   } catch (error) {

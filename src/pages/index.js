@@ -175,6 +175,10 @@ const IndexPage = () => {
         )}
       </div>
       <footer>
+        <p>
+          This website is a user interface that reads from and writes to the
+          Books to Prisoners Volunteer Hours Google Sheet.
+        </p>
         <h3>
           For technical help contact{" "}
           <a href="mailto:suzponeill@gmail.com">Suzanne O'Neill</a>
