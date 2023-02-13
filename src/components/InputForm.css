@@ -28,3 +28,7 @@ select {
   height: 31px;
   align-self: center;
 }
+
+#lengthError {
+  color: #980000;
+}

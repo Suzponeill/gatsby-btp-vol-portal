@@ -11,6 +11,7 @@ const IntialVolForm = {
 const InputForm = (props) => {
   const [formData, setFormData] = useState(IntialVolForm);
   const [typeSelected, setTypeSelected] = useState("None");
+  const [lengthError, setLengthError] = useState("");
 
   const handleChange = (e) => {
     const newFormData = {
@@ -24,32 +25,41 @@ const InputForm = (props) => {
     setTypeSelected(e.target.value);
   };
 
-  const handleVolCheckIn = (e) => {
+  const handleVolCheckIn = async (e) => {
     e.preventDefault();
-    const today = new Date();
-    let submitVal = { ...formData };
-    submitVal["fullName"] = formData.first + " " + formData.last;
-    submitVal["date"] =
-      parseInt(today.getMonth() + 1) +
-      "/" +
-      today.getDate() +
-      "/" +
-      today.getFullYear();
-    submitVal["start"] = today.toLocaleString("en-US", {
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-    });
-    submitVal["end"] = null;
-    submitVal["checked"] = false;
-    if (typeSelected === undefined) {
-      submitVal["volType"] = "None";
+    if (formData.first.length === 0) {
+      setLengthError("Please enter a first name to check in.");
+      console.log(lengthError);
+    } else if (formData.last.length === 0) {
+      setLengthError("Please enter a last name to check in.");
+      console.log(lengthError);
     } else {
-      submitVal["volType"] = typeSelected;
+      setLengthError("");
+      const today = new Date();
+      let submitVal = { ...formData };
+      submitVal["fullName"] = formData.first + " " + formData.last;
+      submitVal["date"] =
+        parseInt(today.getMonth() + 1) +
+        "/" +
+        today.getDate() +
+        "/" +
+        today.getFullYear();
+      submitVal["start"] = today.toLocaleString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+      submitVal["end"] = null;
+      submitVal["checked"] = false;
+      if (typeSelected === undefined) {
+        submitVal["volType"] = "None";
+      } else {
+        submitVal["volType"] = typeSelected;
+      }
+      props.checkInVolCallBackFunc(submitVal);
+      setFormData(IntialVolForm);
+      setTypeSelected("None");
     }
-    props.checkInVolCallBackFunc(submitVal);
-    setFormData(IntialVolForm);
-    setTypeSelected("None");
   };
 
   const isDisabled = props.isSubmitting ? "disabled" : "enabled";
@@ -76,6 +86,7 @@ const InputForm = (props) => {
             value={formData.last}
             onChange={handleChange}
           />
+          {lengthError && <h4 id="lengthError">{lengthError}</h4>}
         </div>
 
         <label htmlFor="volType">Volunteer Type</label>
