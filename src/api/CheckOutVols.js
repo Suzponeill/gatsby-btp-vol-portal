@@ -23,22 +23,23 @@ export default async function handler(req, res) {
 
     const endhours = Number(end.split(":", 1));
     const endMinutes = Number(end.slice(-5, -3));
+    const shift = end.slice(-2);
 
     const getEndRnd = () => {
       let m = (parseInt((endMinutes + 7.5) / 15) * 15) % 60;
       m = m < 10 ? "0" + m : m;
       let h = endMinutes > 52 ? (endhours === 23 ? 0 : ++endhours) : endhours;
-      const shiftRnd = h < 12 ? "AM" : "PM";
       h = h < 10 ? "0" + h : h > 12 ? (h -= 12) : h;
-      return `${h}:${m} ${shiftRnd}`;
+      return `${h}:${m} ${shift}`;
     };
 
     const calculateHours_Rnd = () => {
       let startHour = Number(start.split(":", 1));
       const startMins = Number(start.slice(-5, -3));
       start.slice(-2) === "PM" ? (startHour += 12) : startHour;
+      const endHr24 = shift === "PM" ? endhours + 12 : endhours;
       const totalMins = (endMinutes - startMins) / 100;
-      const totalHours = endhours - startHour + totalMins;
+      const totalHours = endHr24 - startHour + totalMins;
       return (Math.round(totalHours * 4) / 4).toFixed(2);
     };
 
