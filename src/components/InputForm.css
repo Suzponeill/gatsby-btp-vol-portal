@@ -20,6 +20,7 @@ input {
   height: 25px;
   flex-grow: 4;
   min-width: 200px;
+  max-width: 400px;
   align-self: center;
 }
 

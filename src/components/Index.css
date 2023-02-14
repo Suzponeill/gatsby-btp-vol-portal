@@ -69,6 +69,8 @@ thead {
 td {
   text-align: center;
   height: 33px;
+  max-width: 500px;
+  overflow-wrap: break-word;
 }
 
 .checkBoxContainer {
