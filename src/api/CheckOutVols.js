@@ -35,9 +35,12 @@ export default async function handler(req, res) {
 
     const calculateHours_Rnd = () => {
       let startHour = Number(start.split(":", 1));
-      start.slice(-2) === "PM" ? (startHour += 12) : startHour;
+      start.slice(-2) === "PM" && startHour < 12
+        ? (startHour += 12)
+        : startHour;
       const startMins = Number(start.slice(-5, -3));
-      const endHr24 = shift === "PM" ? endhours + 12 : endhours;
+      const endHr24 =
+        shift === "PM" && endhours < 12 ? endhours + 12 : endhours;
       const totalMins = (endMinutes - startMins) / 60;
       const totalHours = endHr24 - startHour + totalMins;
       return (Math.round(totalHours * 4) / 4).toFixed(2);
