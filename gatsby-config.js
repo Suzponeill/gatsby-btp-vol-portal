@@ -8,7 +8,7 @@ require("dotenv").config({
 module.exports = {
   siteMetadata: {
     title: `gatsby_btp_vol_portal`,
-    siteUrl: `https://www.yourdomain.tld`,
+    siteUrl: `https://gatsbybtpvolportalmain.gatsbyjs.io/`,
   },
   flags: {
     FUNCTIONS: true,
