@@ -8,7 +8,7 @@ const IndexPage = () => {
   const [checkedInVols, setCheckedInVols] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(true);
   const [isCheckingOut, setIsCheckingOut] = useState(true);
-  const [isError, setIsError] = useState(false);
+  const [isError, setIsError] = useState({ error: false, message: "" });
   const [checkedInCount, setCheckedInCount] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -148,6 +148,7 @@ const IndexPage = () => {
               id="Input"
               checkInVolCallBackFunc={checkInVol}
             />
+            {isError.error && <h4 id="error_log">!{isError.message}!</h4>}
             <div id="CheckedIn-Container">
               <h2 id="list-label">
                 {checkedInCount === 1

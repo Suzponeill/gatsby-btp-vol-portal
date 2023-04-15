@@ -33,3 +33,8 @@ select {
 #lengthError {
   color: #980000;
 }
+
+#error_log {
+  color: #980000;
+  margin-left: 15px;
+}

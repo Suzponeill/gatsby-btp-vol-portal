@@ -76,7 +76,7 @@ const InputForm = (props) => {
             name="first"
             value={formData.first}
             onChange={handleChange}
-            autocomplete="off"
+            autoComplete="off"
           />
 
           <label htmlFor="last">Last Name</label>
@@ -86,7 +86,7 @@ const InputForm = (props) => {
             name="last"
             value={formData.last}
             onChange={handleChange}
-            autocomplete="off"
+            autoComplete="off"
           />
           {lengthError && <h4 id="lengthError">{lengthError}</h4>}
         </div>
@@ -107,7 +107,7 @@ const InputForm = (props) => {
         </select>
 
         <button
-          disabled={props.isSubmitting || props.isError}
+          disabled={props.isSubmitting || props.isError.error}
           id="Check-in-button"
           type="submit"
           value="Check In Volunteer"
