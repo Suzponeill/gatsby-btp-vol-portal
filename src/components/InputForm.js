@@ -76,6 +76,7 @@ const InputForm = (props) => {
             name="first"
             value={formData.first}
             onChange={handleChange}
+            autocomplete="off"
           />
 
           <label htmlFor="last">Last Name</label>
@@ -85,6 +86,7 @@ const InputForm = (props) => {
             name="last"
             value={formData.last}
             onChange={handleChange}
+            autocomplete="off"
           />
           {lengthError && <h4 id="lengthError">{lengthError}</h4>}
         </div>

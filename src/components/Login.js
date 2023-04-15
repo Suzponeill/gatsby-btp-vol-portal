@@ -29,6 +29,7 @@ const LoginForm = (props) => {
             name="password"
             value={formPWD}
             onChange={handleChange}
+            autocomplete="off"
           />
         </div>
 
